@@ -49,7 +49,11 @@ export function updateCartNumber() {
   const cartCountElement = document.querySelector('.cart-count');
   //Add a superscript number of items in the cart to the backpack icon according to the number of items in the cart
   if (cartCountElement) {
-    cartCountElement.textContent = cartItems.length;
+    let counter = 0;
+    cartItems.forEach(product => {
+      counter += product.quantity;
+    });
+    cartCountElement.textContent = counter;
   }
 }
 
@@ -59,7 +63,7 @@ function productDetailsTemplate(product) {
   document.querySelector('h3').textContent = product.NameWithoutBrand;
 
   const productImage = document.getElementById('productImage');
-  productImage.src = product.Image;
+  productImage.src = product.Images.PrimaryLarge;
   productImage.alt = product.NameWithoutBrand;
 
   const productPriceContainer = document.getElementById('productPrice');
@@ -75,10 +79,17 @@ function productDetailsTemplate(product) {
     finalPrice.className = "discounted-price";
     finalPrice.textContent = `$${product.FinalPrice.toFixed(2)}`;
 
-    // Append both prices to the container
+    // Create amount saved flag
+    const amountSaved = product.SuggestedRetailPrice - product.FinalPrice;
+    const discountFlag = document.createElement("span");
+    discountFlag.className = "discount-flag";
+    discountFlag.textContent = `Save $${amountSaved.toFixed(2)}!`;
+
+    // Append prices and flag to the container
     productPriceContainer.innerHTML = "";
     productPriceContainer.appendChild(originalPrice);
     productPriceContainer.appendChild(finalPrice);
+    productPriceContainer.appendChild(discountFlag);
   } else {
     productPriceContainer.textContent = `$${product.FinalPrice.toFixed(2)}`;
   }

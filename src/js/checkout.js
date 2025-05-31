@@ -1,19 +1,28 @@
-import { loadHeaderFooter } from "./utils.mjs";
-import { CheckoutProcess } from "./CheckoutProcess.mjs";
+import CheckoutProcess from "./CheckoutProcess.mjs";
 
-loadHeaderFooter();
+document.addEventListener("DOMContentLoaded", () => {
+  const checkout = new CheckoutProcess();
 
-const order = new CheckoutProcess("so-cart", ".checkout-summary");
-order.init();
+  // Display the current order summary on page load
+  checkout.displayOrderSummary();
 
-// Add event listeners to fire calculateOrderTotal when the user changes the zip code
-document
-  .querySelector("#zip")
-  .addEventListener("blur", order.calculateOrderTotal.bind(order));
+  // Get the checkout form by its ID
+  const form = document.getElementById("checkout-form");
+  if (!form) {
+    console.error("Checkout form not found");
+    return;
+  }
 
-// listening for click on the button
-document.querySelector("#checkoutSubmit").addEventListener("click", (e) => {
-  e.preventDefault();
+  // When form is submitted, process the checkout
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  order.checkout();
+    try {
+      const response = await checkout.checkout(form);
+      alert("Order successful! Order ID: " + response.orderId);
+      // You can add code here to redirect or clear cart, etc.
+    } catch (error) {
+      alert("Checkout failed: " + error.message);
+    }
+  });
 });
