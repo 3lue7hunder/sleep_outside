@@ -1,4 +1,4 @@
-import { loadHeaderFooter, getLocalStorage } from './utils.mjs';
+import { loadHeaderFooter, getLocalStorage, updateBreadcrumb } from './utils.mjs';
 import ExternalServices from './ExternalServices.mjs';
 import ProductList from './ProductList.mjs';
 import { updateCartNumber } from "./ProductDetails.mjs";
@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
   tentList.init();
 
   updateCartNumber();
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateBreadcrumb()
 });
 
 document.addEventListener("DOMContentLoaded", function() {
